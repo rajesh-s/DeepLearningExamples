@@ -354,6 +354,15 @@ def add_parser_arguments(parser, skip_arch=False):
         choices=[am.name for am in AffinityMode],
     )
 
+    parser.add_argument(
+        "--gpu_core",
+        type=str,
+        default="0",
+        required=False,
+        help="GPU to run on",
+    )
+
+
 
 def prepare_for_training(args, model_args, model_arch):
     args.distributed = False
@@ -663,6 +672,8 @@ if __name__ == "__main__":
     add_parser_arguments(parser)
 
     args, rest = parser.parse_known_args()
+
+    os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu_core
 
     model_arch = available_models()[args.arch]
     model_args, rest = model_arch.parser().parse_known_args(rest)
